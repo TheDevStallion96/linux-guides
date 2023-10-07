@@ -53,7 +53,7 @@ Your custom resolution should now be applied. If you are satisfied with the new 
 
 ## Automated Script:
 
-```
+```bash
 #!/bin/bash
 
 # Prompt the user for resolution width
