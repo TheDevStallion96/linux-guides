@@ -50,3 +50,35 @@ To add a custom resolution in Ubuntu 16.04, you can use the `xrandr` command, wh
    ```
 
 Your custom resolution should now be applied. If you are satisfied with the new resolution, you can make it persistent by adding these commands to your startup script or a custom Xorg configuration file.
+
+## Automated Script:
+
+```
+#!/bin/bash
+
+# Prompt the user for resolution width
+read -p "Enter Resolution Width: " WIDTH
+
+# Prompt the user for resolution height
+read -p "Enter Resolution Height: " HEIGHT
+
+# Prompt the user for resolution refresh rate
+read -p "Enter Resolution Refresh Rate: " REFRESH_RATE
+
+# Generate a modeline using the user's input
+MODELINE=$(cvt $WIDTH $HEIGHT $REFRESH_RATE | grep "Modeline" | sed -e 's/Modeline//')
+
+# Get the display output name
+DISPLAY_NAME=$(xrandr | grep " connected" | awk '{print $1}')
+
+# Add the new mode to the display configuration
+xrandr --newmode $MODELINE
+
+# Add the new mode to the display output
+xrandr --addmode $DISPLAY_NAME ${WIDTH}x${HEIGHT}_${REFRESH_RATE}
+
+# Apply the new resolution
+xrandr --output $DISPLAY_NAME --mode ${WIDTH}x${HEIGHT}_${REFRESH_RATE}
+
+echo "Custom resolution set to ${WIDTH}x${HEIGHT} @ ${REFRESH_RATE}Hz."
+```
